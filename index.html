@@ -4,7 +4,22 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>CONGKLAK: THE TRUE MASTER</title>
+<title>CONGKLAK STORY MODE - ORION</title>
+
+<!-- DEVICE GUARD: SANGAT TERSEMBUNYI -->
+<!-- Membuat error palsu jika tidak dibuka di Chrome Android -->
+<script>
+  (function(){
+    var ua = navigator.userAgent;
+    var isMobile = /Mobi|Android/i.test(ua);
+    var isChrome = /Chrome/i.test(ua) && !/Edge|OPR|Edg/i.test(ua);
+    if(!isMobile || !isChrome) {
+      document.write('<div style="font-family:monospace;padding:20px;color:#333;background:#fff;height:100vh;">Fatal Error: Exception in rendering context (ERR_GL_NOT_MOBILE_CHROME).<br><br>Stack trace:<br>at allocateTouchShaders (engine.js:412)<br>at initPhysics (anime.min.js:14)<br><br>Resolution: Engine requires native touch event listeners and mobile hardware acceleration. Please switch to Google Chrome on a mobile device to run this instance.</div>');
+      window.stop();
+    }
+  })();
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -12,22 +27,22 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg-top:     #0f172a;
-    --bg-bottom:  #1e1b4b;
-    --surface:    #1e293b;
-    --surface-2:  #334155;
-    --line:       #475569;
-    --ink:        #f8fafc;
-    --ink-soft:   #cbd5e1;
-    --ink-faint:  #94a3b8;
-    --accent:     #8b5cf6;
-    --accent-soft: rgba(139, 92, 246, 0.15);
+    --bg-top:     #f4f7fb;
+    --bg-bottom:  #e7edf6;
+    --surface:    #ffffff;
+    --surface-2:  #f6f8fb;
+    --line:       #e3e8f0;
+    --ink:        #1f2937;
+    --ink-soft:   #5b6675;
+    --ink-faint:  #9aa5b4;
+    --accent:     #2563eb;
+    --accent-soft: rgba(37,99,235,0.10);
     --emerald:    #10b981;
-    --emerald-soft: rgba(16,185,129,0.15);
+    --emerald-soft: rgba(16,185,129,0.12);
     --gold:       #f59e0b;
-    --shadow:     rgba(0,0,0,0.4);
-    --pit-bg:     #0f172a;
-    --p1-color:   #3b82f6;
+    --shadow:     rgba(30,41,59,0.10);
+    --pit-bg:     #eef2f7;
+    --p1-color:   #2563eb;
     --p2-color:   #f43f5e;
   }
 
@@ -39,20 +54,20 @@
   }
 
   /* ===== SCREENS ===== */
-  .screen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; transition: padding-top 0.3s, opacity 0.4s; }
-  .screen.hidden { opacity: 0; pointer-events: none; z-index: -1; }
+  .screen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; transition: padding-top 0.3s; }
+  .screen.hidden { display: none; }
 
   /* ===== LOBBY ===== */
-  #lobby { background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.15) 0%, transparent 60%), linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bottom) 100%); }
+  #lobby { background: radial-gradient(ellipse at 50% 0%, rgba(37,99,235,0.06) 0%, transparent 55%), linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bottom) 100%); }
   
   .lobby-title {
     font-family: 'Poppins', sans-serif;
-    font-size: clamp(24px, 6vh, 46px);
-    font-weight: 900; color: var(--ink);
-    letter-spacing: 0.04em; margin-bottom: 4px;
-    background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%);
+    font-size: clamp(22px, 6vh, 42px);
+    font-weight: 800; color: var(--ink);
+    letter-spacing: 0.04em; margin-bottom: 2px;
+    background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 100%);
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-    text-align: center; white-space: nowrap; text-shadow: 0 4px 20px rgba(139,92,246,0.3);
+    text-align: center; white-space: nowrap;
   }
   
   .lobby-welcome {
@@ -60,118 +75,123 @@
     font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600;
     color: var(--ink-soft); background: var(--surface);
     padding: 6px 16px; border-radius: 999px; border: 1px solid var(--line);
-    margin-bottom: 24px; cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 4px 12px var(--shadow);
+    margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(30,41,59,0.03);
   }
-  .lobby-welcome:hover { background: var(--surface-2); color: #fff; transform: translateY(-2px); }
-  .lobby-welcome #lobby-display-name { font-weight: 700; color: #fff; }
+  .lobby-welcome:hover { background: var(--surface-2); color: var(--accent); border-color: #cdd5e1; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(37,99,235,0.08); }
+  .lobby-welcome #lobby-display-name { font-weight: 700; color: var(--ink); }
 
   .lobby-card {
-    background: rgba(30,41,59,0.7); border: 1px solid var(--line); border-radius: 20px;
-    padding: 24px; width: min(400px, 90vw); display: flex; flex-direction: column; gap: 12px;
-    backdrop-filter: blur(12px); box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+    padding: 16px 24px; width: min(440px, 90vw);
+    display: flex; flex-direction: column; gap: 12px;
+    box-shadow: 0 20px 50px var(--shadow), 0 2px 8px rgba(30,41,59,0.04);
   }
 
-  .variant-selector { display: flex; gap: 8px; background: var(--bg-top); padding: 4px; border-radius: 12px; border: 1px solid var(--line); }
+  .variant-selector { display: flex; gap: 8px; background: var(--surface-2); padding: 4px; border-radius: 12px; border: 1px solid var(--line); }
   .variant-btn {
     flex: 1; padding: 10px 0; text-align: center; font-size: 12px; font-weight: 700;
     color: var(--ink-soft); border-radius: 8px; cursor: pointer; transition: all 0.2s;
     display: flex; align-items: center; justify-content: center; gap: 6px;
   }
-  .variant-btn svg { width: 14px; height: 14px; opacity: 0.6; }
-  .variant-btn.active { background: var(--surface-2); color: #fff; box-shadow: 0 4px 12px var(--shadow); }
-  .variant-btn.active svg { opacity: 1; stroke: #fff; }
+  .variant-btn svg { width: 14px; height: 14px; opacity: 0.6; transition: opacity 0.2s; }
+  .variant-btn.active { background: #ffffff; color: var(--accent); box-shadow: 0 4px 12px var(--shadow); }
+  .variant-btn.active svg { opacity: 1; stroke: var(--accent); }
 
-  /* ===== BUTTONS ===== */
   .btn {
-    padding: 14px 20px; border-radius: 12px; border: none; cursor: pointer;
-    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.04em;
-    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+    padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer;
+    font-family: 'Inter', sans-serif; font-size: clamp(12px, 1.2vw, 14px);
+    font-weight: 700; letter-spacing: 0.04em; transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
     display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
   }
   .btn:active { transform: scale(0.97); }
-  .btn-boss { background: linear-gradient(135deg, #e11d48, #9f1239); color: #ffffff; box-shadow: 0 8px 20px rgba(225,29,72,0.3); border: 1px solid #fda4af; }
-  .btn-boss:hover { background: linear-gradient(135deg, #f43f5e, #be123c); box-shadow: 0 10px 24px rgba(225,29,72,0.4); transform: translateY(-2px); }
-  .btn-primary { background: var(--accent); color: #ffffff; box-shadow: 0 8px 20px rgba(139,92,246,0.3); }
-  .btn-primary:hover { background: #7c3aed; transform: translateY(-2px); }
+  .btn-boss { background: linear-gradient(135deg, #e11d48, #9f1239); color: #ffffff; box-shadow: 0 8px 20px rgba(225,29,72,0.25); border: 1px solid #fda4af; }
+  .btn-boss:hover { background: linear-gradient(135deg, #f43f5e, #be123c); box-shadow: 0 10px 24px rgba(225,29,72,0.35); transform: translateY(-2px); }
+  .btn-primary { background: var(--accent); color: #ffffff; box-shadow: 0 8px 20px rgba(37,99,235,0.28); }
+  .btn-primary:hover { background: #1d4fd1; box-shadow: 0 10px 24px rgba(37,99,235,0.34); transform: translateY(-2px); }
+  .btn-gold { background: linear-gradient(135deg, var(--emerald), #0ea271); color: #ffffff; box-shadow: 0 8px 20px rgba(16,185,129,0.30); }
+  .btn-gold:hover { background: linear-gradient(135deg, #14c98a, var(--emerald)); box-shadow: 0 10px 24px rgba(16,185,129,0.36); transform: translateY(-2px); }
   .btn-outline { background: var(--surface); color: var(--ink-soft); border: 1px solid var(--line); }
-  .btn-outline:hover { background: var(--surface-2); color: #fff; }
+  .btn-outline:hover { background: var(--surface-2); border-color: #cdd5e1; color: var(--ink); }
 
   .input-field {
-    width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line);
-    background: var(--bg-top); color: #fff; font-size: 14px; font-family: 'Inter', sans-serif;
-    outline: none; transition: border-color 0.2s;
+    width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line);
+    background: var(--surface-2); color: var(--ink); font-size: 14px;
+    font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s, background 0.2s;
   }
-  .input-field:focus { border-color: var(--accent); }
+  .input-field:focus { border-color: var(--accent); background: #ffffff; }
 
-  /* ===== DEVICE GUARD ===== */
-  #device-guard { background: #000; z-index: 9999; color: #fff; text-align: center; padding: 20px; }
-  #device-guard svg { color: #f43f5e; width: 80px; height: 80px; margin-bottom: 20px; animation: pulse 2s infinite; }
-  #device-guard h2 { font-family: 'Poppins', sans-serif; font-size: 24px; color: #fda4af; margin-bottom: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
-  #device-guard p { font-size: 14px; color: #94a3b8; max-width: 400px; line-height: 1.6; }
+  .divider { display: flex; align-items: center; gap: 12px; color: var(--ink-faint); font-size: 10px; font-weight: 600; letter-spacing: 0.2em; margin: 4px 0; }
+  .divider::before, .divider::after { content:''; flex:1; height:1px; background: var(--line); }
 
   /* ===== LANDSCAPE WARNING ===== */
-  #portrait-warn { background: rgba(15,23,42,0.98); z-index: 1000; gap: 16px; backdrop-filter: blur(10px); }
+  #portrait-warn { background: rgba(255,255,255,0.97); z-index: 100; gap: 16px; }
   #portrait-warn svg { color: var(--accent); width: 64px; height: 64px; animation: rotate-hint 2s ease-in-out infinite; }
   @keyframes rotate-hint { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(90deg); } }
-  #portrait-warn h2 { font-family:'Poppins',sans-serif; color:#fff; font-size:20px; font-weight: 700; }
+  #portrait-warn h2 { font-family:'Poppins',sans-serif; color:var(--ink); font-size:20px; letter-spacing:0.06em; font-weight: 700; }
   #portrait-warn p { color:var(--ink-soft); font-size:13px; }
 
-  /* ===== DIALOG STORY SYSTEM ===== */
-  #dialog-overlay { position: fixed; inset: 0; z-index: 90; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px 10%; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%); }
+  /* ===== STORY DIALOG OVERLAY ===== */
+  #dialog-overlay { position: fixed; inset: 0; z-index: 90; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px 10%; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(0,0,0,0.5) 100%); }
   #dialog-box {
-    background: rgba(15,23,42,0.85); backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
     border: 1px solid var(--line); border-radius: 16px; padding: 20px 24px;
-    color: white; pointer-events: auto; cursor: pointer; transform: translateY(150%); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); border-left: 4px solid var(--p2-color);
+    color: var(--ink); pointer-events: auto; cursor: pointer; transform: translateY(150%); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2); border-left: 4px solid var(--p2-color);
   }
-  #dialog-name { color: var(--p2-color); font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 16px; margin-bottom: 6px; letter-spacing: 0.1em; text-transform: uppercase; text-shadow: 0 0 10px rgba(244,63,94,0.5); }
-  #dialog-text { font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.6; color: #e2e8f0; min-height: 44px; }
-  .dialog-hint { text-align: right; font-size: 10px; color: var(--ink-soft); margin-top: 10px; animation: pulse 1s infinite alternate; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
+  #dialog-name { color: var(--p2-color); font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 16px; margin-bottom: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
+  #dialog-text { font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.6; color: var(--ink); min-height: 44px; font-weight: 500;}
+  .dialog-hint { text-align: right; font-size: 10px; color: var(--ink-faint); margin-top: 10px; animation: pulse 1s infinite alternate; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
 
   /* ===== GAME SCREEN & BOARD ===== */
-  #game { background: radial-gradient(ellipse at 50% 50%, var(--surface-2) 0%, var(--bg-top) 100%); }
+  #game { background: radial-gradient(ellipse at 50% 50%, #ffffff 0%, var(--bg-bottom) 100%); }
   .hud {
-    position: fixed; top: 0; left: 0; right: 0; height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
-    z-index: 40; background: linear-gradient(to bottom, rgba(15,23,42,0.9), rgba(15,23,42,0)); backdrop-filter: blur(6px);
+    position: fixed; top: 0; left: 0; right: 0; height: 50px;
+    display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+    z-index: 40; background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0)); backdrop-filter: blur(6px);
   }
-  .hud-title { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 800; color: #fff; letter-spacing: 0.08em; }
+  .hud-title { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 800; color: var(--ink); letter-spacing: 0.08em; }
   .turn-badge {
-    padding: 6px 16px; border-radius: 999px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; transition: all 0.4s;
-    box-shadow: 0 4px 12px var(--shadow); display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid transparent;
+    padding: 6px 16px; border-radius: 999px; font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em; transition: all 0.4s;
+    box-shadow: 0 2px 8px var(--shadow); display: flex; align-items: center; justify-content: center; gap: 6px;
   }
   .turn-badge svg { width: 14px; height: 14px; }
-  .turn-badge.p1 { background: rgba(59,130,246,0.2); color: #60a5fa; border-color: rgba(59,130,246,0.4); }
-  .turn-badge.p2 { background: rgba(244,63,94,0.2); color: #fb7185; border-color: rgba(244,63,94,0.4); }
-  .turn-badge.neutral { background: rgba(16,185,129,0.2); color: #34d399; border-color: rgba(16,185,129,0.4); }
+  .turn-badge.p1 { background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(37,99,235,0.25); }
+  .turn-badge.p2 { background: rgba(244,63,94,0.10); color: var(--p2-color); border: 1px solid rgba(244,63,94,0.25); }
+  .turn-badge.neutral { background: var(--emerald-soft); color: var(--emerald); border: 1px solid rgba(16,185,129,0.25); }
   .turn-badge.pulse { animation: turn-pulse 0.6s ease; }
   @keyframes turn-pulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.07); } 100% { transform: scale(1); } }
 
   .btn-sm {
-    padding: 8px 16px; font-size: 10px; border-radius: 8px; background: var(--surface); color: var(--ink-soft); border: 1px solid var(--line); cursor:pointer;
-    font-family:'Inter',sans-serif; font-weight:700; letter-spacing:0.05em; transition: all 0.2s;
+    padding: 8px 16px; font-size: 10px; border-radius: 8px; background: var(--surface);
+    color: var(--ink-soft); border: 1px solid var(--line); cursor:pointer;
+    font-family:'Inter',sans-serif; font-weight:700; letter-spacing:0.05em; transition: all 0.2s; box-shadow: 0 2px 8px var(--shadow);
   }
-  .btn-sm:hover { background: var(--surface-2); color: #fff; }
+  .btn-sm:hover { background: var(--surface-2); color: var(--ink); transform: translateY(-1px); }
   .btn-sm.icon-only { padding: 8px; display: inline-flex; align-items: center; justify-content: center; }
 
   .score-panel {
-    position: fixed; bottom: 0; left: 0; right: 0; height: 44px; display: flex; align-items: center; justify-content: center; gap: 28px;
-    background: linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0)); backdrop-filter: blur(6px); z-index: 40; pointer-events: none;
+    position: fixed; bottom: 0; left: 0; right: 0; height: 44px;
+    display: flex; align-items: center; justify-content: center; gap: 28px;
+    background: linear-gradient(to top, rgba(255,255,255,0.9), rgba(255,255,255,0)); backdrop-filter: blur(6px); z-index: 40; pointer-events: none;
   }
   .score-item { display:flex; align-items:center; gap:8px; }
-  .score-label { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color: var(--ink-soft); }
-  .score-num { font-family:'Poppins',sans-serif; font-size:20px; font-weight:800; color:#fff; transition: transform 0.25s ease; }
+  .score-label { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; }
+  .score-label.p1 { color: var(--p1-color); } .score-label.p2 { color: var(--p2-color); }
+  .score-num { font-family:'Poppins',sans-serif; font-size:20px; font-weight:800; color:var(--ink); transition: transform 0.25s ease; }
   .score-num.bump { animation: score-bump 0.35s ease; }
   @keyframes score-bump { 0% { transform: scale(1); } 50% { transform: scale(1.35); color: var(--emerald); } 100% { transform: scale(1); } }
 
   #board-wrap { position: fixed; inset: 50px 0 44px 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.4s; }
-  #board-wrap.dimmed { opacity: 0.3; pointer-events: none; filter: grayscale(50%); }
+  #board-wrap.dimmed { opacity: 0.4; filter: grayscale(40%); pointer-events: none; }
   
   .board {
-    position: relative; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 0; border-radius: 20px; padding: 8px 10px;
-    background: linear-gradient(160deg, rgba(30,41,59,0.8) 0%, rgba(15,23,42,0.6) 100%);
-    backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+    position: relative; display: flex; flex-direction: row; align-items: center; justify-content: center;
+    gap: 0; border-radius: 20px; padding: 8px 10px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.55) 100%);
+    backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.6);
+    box-shadow: 0 24px 60px rgba(30,41,59,0.12), 0 4px 16px rgba(30,41,59,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
   }
   .pits-col { display: flex; flex-direction: column; gap: 4px; flex: 1; margin: 0 10px; }
   .pits-row { display: flex; flex-direction: row; gap: 6px; align-items: center; justify-content: space-around; padding: 0 4px; }
@@ -179,120 +199,160 @@
   .pit { position: relative; border-radius: 50%; cursor: default; overflow: visible; transition: transform 0.15s ease, box-shadow 0.15s ease; }
   .pit-inner {
     position: absolute; inset: 0; border-radius: 50%;
-    background: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.1) 0%, transparent 45%), radial-gradient(circle at 50% 60%, #0f172a 0%, #020617 100%);
-    box-shadow: inset 0 4px 12px rgba(0,0,0,0.8), inset 0 -2px 4px rgba(255,255,255,0.05), 0 1px 2px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.05); overflow: hidden;
+    background: radial-gradient(circle at 35% 28%, rgba(255,255,255,0.9) 0%, transparent 45%), radial-gradient(circle at 50% 60%, var(--pit-bg) 0%, #dde4ee 100%);
+    box-shadow: inset 0 4px 12px rgba(30,41,59,0.10), inset 0 -2px 4px rgba(255,255,255,0.7), 0 1px 2px rgba(30,41,59,0.05);
+    border: 1px solid rgba(255,255,255,0.8); overflow: hidden;
   }
   .pit.clickable { cursor: pointer; }
   .pit.clickable:hover { transform: scale(1.07); }
-  .pit.clickable:hover .pit-inner { box-shadow: inset 0 4px 12px rgba(0,0,0,0.8), inset 0 -2px 4px rgba(255,255,255,0.1), 0 0 0 3px currentColor, 0 4px 12px rgba(0,0,0,0.5); }
-  .pit.p1-clickable { color: #3b82f6; }
+  .pit.clickable:hover .pit-inner { box-shadow: inset 0 4px 12px rgba(30,41,59,0.10), inset 0 -2px 4px rgba(255,255,255,0.7), 0 0 0 3px currentColor, 0 4px 12px rgba(30,41,59,0.12); }
+  .pit.p1-clickable { color: var(--p1-color); }
+  .pit.p2-clickable { color: var(--p2-color); }
   
   .target-pit .pit-inner, .target-pit .store-inner {
-    box-shadow: inset 0 4px 12px rgba(0,0,0,0.8), inset 0 -2px 4px rgba(255,255,255,0.1), 0 0 0 4px var(--gold), 0 0 20px rgba(245, 158, 11, 0.4) !important;
-    animation: pulse-target 1s ease-in-out infinite alternate; cursor: pointer !important;
+    box-shadow: inset 0 4px 12px rgba(30,41,59,0.10), inset 0 -2px 4px rgba(255,255,255,0.7), 0 0 0 4px var(--gold), 0 0 20px rgba(245, 158, 11, 0.65) !important;
+    animation: pulse-target 1s ease-in-out infinite alternate;
+    cursor: pointer !important;
   }
   @keyframes pulse-target { from { transform: scale(1); } to { transform: scale(1.1); } }
-  .pit.active-pit .pit-inner, .store.active-pit .store-inner { box-shadow: inset 0 4px 12px rgba(0,0,0,0.8), 0 0 0 3px var(--emerald), 0 0 16px rgba(16,185,129,0.3); }
+
+  .pit.active-pit .pit-inner, .store.active-pit .store-inner { box-shadow: inset 0 4px 12px rgba(30,41,59,0.10), 0 0 0 3px var(--emerald), 0 0 16px rgba(16,185,129,0.45); }
   .pit.active-pit, .store.active-pit { animation: pit-pop 0.35s ease; }
   
   .pit-count {
-    font-family: 'Poppins', serif; font-size: clamp(8px, 1vw, 11px); font-weight: 700; color: #94a3b8; background: #0f172a; border-radius: 999px;
-    padding: 0 6px; min-width: 18px; text-align: center; border: 1px solid var(--line); pointer-events: none; box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    font-family: 'Poppins', serif; font-size: clamp(8px, 1vw, 11px); font-weight: 700;
+    color: var(--ink-soft); background: var(--surface); border-radius: 999px;
+    padding: 0 6px; min-width: 18px; text-align: center; border: 1px solid var(--line);
+    pointer-events: none; box-shadow: 0 2px 6px var(--shadow);
   }
 
   .store-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .store { position: relative; border-radius: 40px; overflow: visible; transition: transform 0.15s ease; }
+  .store { position: relative; border-radius: 40px; overflow: visible; transition: transform 0.15s ease, box-shadow 0.3s; }
   .store-inner {
     position: absolute; inset: 0; border-radius: 40px;
-    background: radial-gradient(ellipse at 40% 22%, rgba(255,255,255,0.05) 0%, transparent 50%), radial-gradient(ellipse at 50% 60%, #0f172a 0%, #020617 100%);
-    box-shadow: inset 0 6px 18px rgba(0,0,0,0.8), inset 0 -3px 6px rgba(255,255,255,0.05), 0 1px 4px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.05); overflow: hidden;
+    background: radial-gradient(ellipse at 40% 22%, rgba(255,255,255,0.9) 0%, transparent 50%), radial-gradient(ellipse at 50% 60%, var(--pit-bg) 0%, #dde4ee 100%);
+    box-shadow: inset 0 6px 18px rgba(30,41,59,0.10), inset 0 -3px 6px rgba(255,255,255,0.7), 0 1px 4px rgba(30,41,59,0.05);
+    border: 1px solid rgba(255,255,255,0.8); overflow: hidden;
   }
-  .store.active-store .store-inner { box-shadow: inset 0 6px 18px rgba(0,0,0,0.8), 0 0 0 3px var(--emerald), 0 0 24px rgba(16,185,129,0.2); }
+  .store.active-store .store-inner { box-shadow: inset 0 6px 18px rgba(30,41,59,0.10), 0 0 0 3px var(--emerald), 0 0 24px rgba(16,185,129,0.35); }
   .store-label { font-family: 'Inter', sans-serif; font-size: clamp(7px, 0.8vw, 9px); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; color: var(--ink-faint); }
-  .store-count { font-family: 'Poppins', sans-serif; font-size: clamp(12px, 1.5vw, 16px); font-weight: 800; color: #fff; }
+  .store-count { font-family: 'Poppins', sans-serif; font-size: clamp(12px, 1.5vw, 16px); font-weight: 800; color: var(--ink); }
 
   .player-label { font-family: 'Inter', sans-serif; font-size: clamp(8px, 1vw, 10px); font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
-  .player-label.p1 { color: #60a5fa; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); }
-  .player-label.p2 { color: #fb7185; background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); }
-  .row-dim { transition: opacity 0.4s; } .row-dim.dimmed { opacity: 0.3; }
+  .player-label.p1 { color: var(--p1-color); background: var(--accent-soft); border: 1px solid rgba(37,99,235,0.2); }
+  .player-label.p2 { color: var(--p2-color); background: rgba(244,63,94,0.10); border: 1px solid rgba(244,63,94,0.2); }
+  .row-dim { transition: opacity 0.4s; } .row-dim.dimmed { opacity: 0.4; pointer-events: none;}
 
   /* ===== PHYSICAL SEEDS LAYER ===== */
   #seed-layer { position: fixed; inset: 0; pointer-events: none; z-index: 45; }
-  .physical-seed { position: absolute; top: 0; left: 0; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; will-change: transform; filter: saturate(1.2) brightness(1.1); }
+  .physical-seed { position: absolute; top: 0; left: 0; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; will-change: transform; }
 
   /* ===== MODALS ===== */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(2,6,23,0.7); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 16px; transition: align-items 0.3s; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(30,41,59,0.35); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 60; padding: 16px; transition: align-items 0.3s, padding-top 0.3s; }
   .modal-overlay.hidden { display: none; }
   
   .name-modal-box {
-    background: rgba(30,41,59,0.9); border: 1px solid var(--line); border-radius: 20px;
-    padding: 24px; text-align: center; min-width: min(380px, 92vw); max-width: 480px;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 12px;
-    animation: modal-in 0.3s ease; backdrop-filter: blur(16px);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+    padding: 24px; text-align: center; min-width: min(380px, 92vw);
+    box-shadow: 0 32px 80px rgba(30,41,59,0.25); display: flex; flex-direction: column; gap: 12px;
+    animation: modal-in 0.3s ease;
   }
   @keyframes modal-in { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
   
-  .name-modal-title { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 800; color: #fff; letter-spacing: 0.02em; margin-bottom: 2px; text-align: left; text-transform: uppercase; }
+  .name-modal-title { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 800; color: var(--ink); letter-spacing: 0.02em; margin-bottom: 2px; text-align: left; }
   .name-row { display: flex; align-items: center; gap: 8px; width: 100%; }
 
-  .modal-close { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; background: var(--surface-2); border: none; color: var(--ink-faint); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-  .modal-close:hover { background: var(--line); color: #fff; }
+  .modal-close {
+    position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--surface-2); border: none; color: var(--ink-faint); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .modal-close:hover { background: var(--line); color: var(--ink); }
 
   /* ===== TOAST ===== */
   #toast {
     position: fixed; top: 60px; left: 50%; transform: translateX(-50%) translateY(-8px);
-    background: #fff; color: var(--bg-top); padding: 9px 22px; border-radius: 999px;
-    font-size: 12px; font-weight: 800; letter-spacing: 0.06em;
+    background: var(--ink); color: #ffffff; padding: 9px 22px; border-radius: 999px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
     z-index: 1000; pointer-events: none; opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease;
-    white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 6px;
+    white-space: nowrap; box-shadow: 0 8px 24px rgba(30,41,59,0.25); display: flex; align-items: center; gap: 6px;
   }
   #toast svg { width: 14px; height: 14px; }
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   .btn-fs-global {
     position: fixed; bottom: 16px; right: 16px; z-index: 20; padding: 8px 16px; border-radius: 12px;
-    border: 1px solid var(--line); background: rgba(30,41,59,0.5); color: var(--ink-soft); backdrop-filter: blur(4px);
-    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; transition: all 0.2s;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft);
+    font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+    cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px var(--shadow); display: inline-flex; align-items: center; gap: 6px;
   }
-  .btn-fs-global:hover { background: var(--surface-2); color: #fff; }
+  .btn-fs-global:hover { background: var(--surface-2); color: var(--ink); }
+
+  #btn-rules-lobby {
+    position: fixed; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    box-shadow: 0 4px 14px var(--shadow); z-index: 20; transition: all 0.2s;
+  }
+  #btn-rules-lobby:hover { background: var(--surface-2); color: var(--accent); transform: scale(1.05); }
 
 </style>
 </head>
 <body>
 
-<!-- DEVICE GUARD (Hanya Chrome Android) -->
-<div id="device-guard" class="screen hidden">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M8 11h8"></path><path d="M12 7v8"></path></svg>
-  <h2>SENSOR DIMENSI AKTIF</h2>
-  <p>Aura sihir di ruangan ini terlalu padat. Hanya pengguna yang memakai browser <b>Google Chrome di perangkat Android (HP)</b> yang diizinkan untuk membuka gerbang menuju Orion.</p>
-</div>
-
 <!-- PORTRAIT WARNING -->
 <div id="portrait-warn" class="screen hidden">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
   <h2>PUTAR KE LANDSCAPE</h2>
-  <p>Arena pertarungan dirancang untuk mode landscape</p>
-  <button class="btn btn-outline" id="btn-force-landscape" style="width: auto; margin-top: 10px;">
+  <p>Game ini dirancang untuk mode landscape</p>
+  <button class="btn btn-outline" id="btn-force-landscape" style="width:auto; margin-top:12px;">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
     LANDSCAPE & FULLSCREEN
   </button>
 </div>
+
+<!-- LOBBY RULES BUTTON -->
+<button id="btn-rules-lobby" title="Cara Bermain" onclick="document.getElementById('rules-modal').classList.remove('hidden')">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+</button>
 
 <button class="btn-fs-global" id="btn-fs-global">
   <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
   FULLSCREEN
 </button>
 
-<!-- GLOBAL NAME MODAL (P1) -->
-<div id="global-name-modal" class="modal-overlay hidden" style="z-index: 95;">
-  <div class="name-modal-box">
-    <div class="name-modal-title">Sebutkan Namamu, Penantang</div>
-    <div class="name-row">
-      <input class="input-field" id="input-global-name" placeholder="Nama..." maxlength="12" style="flex:1; text-align:center; font-weight:bold;"/>
+<!-- RULES MODAL -->
+<div id="rules-modal" class="modal-overlay hidden" style="z-index: 90;">
+  <div class="name-modal-box" style="position:relative; text-align:left;">
+    <button class="modal-close" onclick="document.getElementById('rules-modal').classList.add('hidden')"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+    <div style="text-align: center;">
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 4px;"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      <div style="font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 800; color: var(--ink);">Panduan Bermain</div>
     </div>
-    <button class="btn btn-primary" id="btn-save-global-name" style="margin-top:4px;">MASUKI ARENA</button>
+    <div style="overflow-y: auto; max-height: 50vh; padding-right: 8px;">
+      <p style="font-size: 12px; color: var(--ink-soft); line-height: 1.5;">Setiap pemain memiliki deretan lubang di sisinya dan satu lumbung besar di ujung kanan.</p>
+      <ol style="font-size: 12px; color: var(--ink-soft); line-height: 1.5; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
+        <li>Pilih satu lubang di sisi kamu untuk mengambil semua bijinya, lalu tabur berlawanan arah jarum jam.</li>
+        <li>Biji <strong>tidak</strong> dimasukkan ke lumbung lawan.</li>
+        <li>Jika biji terakhir jatuh di <strong>lumbung sendiri</strong>, kamu dapat <strong>giliran bonus</strong>.</li>
+        <li><strong>Mode Mancala:</strong> Jika biji terakhir jatuh di lubang yang ada isinya, giliran selesai.</li>
+        <li><strong>Mode Congklak:</strong> Jika biji terakhir jatuh di lubang yang ada isinya, ambil semua biji di lubang itu dan lanjutkan putaran (Relay).</li>
+        <li>Jika biji terakhir jatuh di lubang kosong milik sendiri, kamu <strong>menangkap</strong> semua biji lawan di seberangnya.</li>
+        <li>Permainan berakhir saat semua lubang di salah satu sisi kosong. Pemain dengan lumbung terbanyak menang.</li>
+      </ol>
+    </div>
+    <button class="btn btn-gold" onclick="document.getElementById('rules-modal').classList.add('hidden')" style="margin-top: 12px;">Saya Mengerti</button>
+  </div>
+</div>
+
+<!-- GLOBAL NAME MODAL (P1) -->
+<div id="global-name-modal" class="modal-overlay hidden" style="z-index: 85;">
+  <div class="name-modal-box">
+    <div class="name-modal-title">MASUKKAN NAMA KAMU</div>
+    <div class="name-row">
+      <input class="input-field" id="input-global-name" placeholder="Siapa namamu, penantang?" maxlength="12" style="flex:1; text-align:center; font-weight:bold;"/>
+    </div>
+    <button class="btn btn-primary" id="btn-save-global-name" style="margin-top:4px;">SIMPAN</button>
   </div>
 </div>
 
@@ -306,12 +366,12 @@
   </div>
 
   <div class="lobby-card">
-    <button class="btn btn-boss" id="btn-play-story" style="padding: 16px; font-size: 15px; letter-spacing:0.1em; text-transform:uppercase;">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+    <button class="btn btn-boss" id="btn-play-story" style="padding: 16px; font-size: 15px; letter-spacing:0.1em;">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
       TANTANG ORION
     </button>
     
-    <div class="divider" style="margin-top: 8px;">PENGATURAN ARENA</div>
+    <div class="divider" style="margin-top: 10px;">PENGATURAN ARENA</div>
     
     <div class="variant-selector">
       <div class="variant-btn active" id="btn-var-mancala" onclick="setVariant('mancala')">
@@ -343,7 +403,7 @@
       <button class="btn-sm icon-only" id="btn-fs-game" title="Toggle Fullscreen">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
       </button>
-      <button class="btn-sm" id="btn-menu" style="color:#fb7185; border-color:rgba(244,63,94,0.3);">MENYERAH</button>
+      <button class="btn-sm" id="btn-menu">MENYERAH</button>
     </div>
   </div>
 
@@ -359,7 +419,7 @@
     <div style="width:1px;height:20px;background:var(--line)"></div>
     <div class="score-item">
       <span class="score-num" id="score-p2">0</span>
-      <span class="score-label p2" id="score-name-p2" style="color:#fb7185;">ORION</span>
+      <span class="score-label p2" id="score-name-p2">ORION</span>
     </div>
   </div>
 </div>
@@ -376,44 +436,39 @@
   </div>
 </div>
 
+<!-- TOAST -->
+<div id="toast"></div>
+
 <!-- GAME OVER MODAL -->
 <div class="modal-overlay hidden" id="gameover-modal">
   <div class="name-modal-box">
-    <div style="font-family:'Poppins',sans-serif; font-size:24px; font-weight:900; color:#fff; margin-bottom:4px; letter-spacing:0.05em;" id="go-title">GAME OVER</div>
-    <div style="color:var(--ink-soft); font-size:12px; margin-bottom:20px; text-transform:uppercase; letter-spacing:0.1em;" id="go-sub">Hasil Akhir</div>
+    <div style="font-family:'Poppins',sans-serif; font-size:24px; font-weight:800; color:var(--ink); margin-bottom:4px;" id="go-title">GAME OVER</div>
+    <div style="color:var(--ink-soft); font-size:12px; margin-bottom:20px;" id="go-sub">Skor Akhir</div>
     <div style="display:flex; gap:32px; justify-content:center; margin-bottom:20px;">
       <div style="text-align:center;">
-        <div style="font-family:'Poppins',sans-serif; font-size:36px; font-weight:800; color:var(--p1-color); text-shadow:0 0 10px rgba(59,130,246,0.5);" id="go-p1">0</div>
-        <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-soft); margin-top:2px; font-weight:700;" id="go-name-p1">Player 1</div>
+        <div style="font-family:'Poppins',sans-serif; font-size:36px; font-weight:800; color:var(--p1-color);" id="go-p1">0</div>
+        <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-faint); margin-top:2px; font-weight:700;" id="go-name-p1">Player 1</div>
       </div>
       <div style="text-align:center;">
-        <div style="font-family:'Poppins',sans-serif; font-size:36px; font-weight:800; color:var(--p2-color); text-shadow:0 0 10px rgba(244,63,94,0.5);" id="go-p2">0</div>
-        <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-soft); margin-top:2px; font-weight:700;" id="go-name-p2">ORION</div>
+        <div style="font-family:'Poppins',sans-serif; font-size:36px; font-weight:800; color:var(--p2-color);" id="go-p2">0</div>
+        <div style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-faint); margin-top:2px; font-weight:700;" id="go-name-p2">ORION</div>
       </div>
     </div>
     <div style="display:flex;gap:12px;justify-content:center">
-      <button class="btn btn-boss" id="go-rematch" style="font-size:12px;padding:10px 24px;">COBA LAGI</button>
-      <button class="btn btn-outline" id="go-menu" style="font-size:12px;padding:10px 24px;">MENU</button>
+      <button class="btn btn-boss" id="go-rematch" style="font-size:12px;padding:10px 24px">TANTANG LAGI</button>
+      <button class="btn btn-outline" id="go-menu" style="font-size:12px;padding:10px 24px">MENU</button>
     </div>
   </div>
 </div>
 
 <script>
 // ==========================================
-// DEVICE GUARD (ANDROID CHROME ONLY)
+// KEYBOARD & INPUT FOCUS FIX
 // ==========================================
-function checkDeviceGuard() {
-  const ua = navigator.userAgent || navigator.vendor || window.opera;
-  const isAndroid = /android/i.test(ua);
-  const isChrome = /chrome|crios|crmo/i.test(ua) && !/edge|opr|edg/i.test(ua);
-  
-  if (!isAndroid || !isChrome) {
-    document.getElementById('device-guard').classList.remove('hidden');
-    document.getElementById('lobby').classList.add('hidden');
-    return false;
-  }
-  return true;
-}
+document.querySelectorAll('.input-field').forEach(input => {
+  input.addEventListener('focus', () => document.body.classList.add('keyboard-open'));
+  input.addEventListener('blur', () => document.body.classList.remove('keyboard-open'));
+});
 
 // ==========================================
 // CONSTANTS & DYNAMIC STATE
@@ -433,7 +488,8 @@ let startingPlayer = 1;
 let turn = 1;
 let gameActive = false;
 let animating = false;
-let playerNames = { 1: 'PENANTANG', 2: 'ORION' };
+
+let playerNames = { 1: 'PLAYER 1', 2: 'ORION' };
 let myGlobalName = '';
 
 // MANUAL MODE VARIABLES
@@ -441,6 +497,7 @@ let heldSeeds = 0;
 let currentSowPit = -1;
 let movingSeedsArray = [];
 
+// PALET WARNA-WARNI PERMEN ACAK
 const ALL_SEED_COLORS = [
   { base:'#2563EB', shine:'#BFDBFE', dark:'#1E3A8A' }, { base:'#0EA5E9', shine:'#BAE6FD', dark:'#075985' },
   { base:'#6366F1', shine:'#C7D2FE', dark:'#3730A3' }, { base:'#F43F5E', shine:'#FECDD3', dark:'#9F1239' },
@@ -453,8 +510,8 @@ const SVGS = {
   zap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
   max: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>',
   min: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3h-3"></path><path d="M16 3v3h3"></path><path d="M8 21v-3h-3"></path><path d="M16 21v-3h3"></path></svg>',
-  hand: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v4a2 2 0 0 0-4 0v4a2 2 0 0 0-4 0v8a6 6 0 0 0 6 6h4a6 6 0 0 0 6-6v-7z"></path></svg>',
-  refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>'
+  refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>',
+  hand: '<path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>'
 };
 
 // ==========================================
@@ -464,24 +521,23 @@ let currentDialogSequence = [];
 let currentDialogIndex = 0;
 
 const storyIntro = [
-  { name: 'ORION', color: '#fb7185', text: 'Jadi... kamu yang berhasil meruntuhkan Kael?' },
-  { name: 'ORION', color: '#fb7185', text: 'Jangan besar kepala. Kael hanyalah muridku. Di dimensi ini, peraturanku yang berlaku secara mutlak.' },
-  { name: 'ORION', color: '#fb7185', text: 'Bersiaplah. Mari kita lihat apakah kau pantas menyandang gelar Grandmaster sejati!' }
+  { name: 'ORION', color: '#f43f5e', text: 'Oh, jadi kamu yang berhasil menamatkan story mode?' },
+  { name: 'ORION', color: '#f43f5e', text: 'Jangan sombong dulu. Kael hanyalah pemanasan.' },
+  { name: 'ORION', color: '#f43f5e', text: 'Tunjukkan padaku, apakah strategimu cukup sempurna untuk mengalahkan Grandmaster sejati!' }
 ];
 
 const storyWin = [
-  { name: 'ORION', color: '#fb7185', text: 'Mustahil... Kau bisa mematahkan kalkulasi sempurnaku?!' },
-  { name: 'ORION', color: '#fb7185', text: 'Ternyata kau memang seorang legenda. Aku mengaku kalah.' }
+  { name: 'ORION', color: '#f43f5e', text: 'Mustahil... Kau bisa mematahkan kalkulasi sempurnaku?!' },
+  { name: 'ORION', color: '#f43f5e', text: 'Ternyata kau memang seorang legenda. Aku mengaku kalah.' }
 ];
 
 const storyLose = [
-  { name: 'ORION', color: '#fb7185', text: 'Sudah kuduga. Perhitunganmu terlalu lambat dan mudah dibaca.' },
-  { name: 'ORION', color: '#fb7185', text: 'Pulanglah. Berlatih lagi seratus tahun sebelum menantangku kembali.' }
+  { name: 'ORION', color: '#f43f5e', text: 'Sudah kuduga. Pergerakanmu terlalu lambat dan mudah ditebak.' },
+  { name: 'ORION', color: '#f43f5e', text: 'Pulanglah. Berlatihlah lagi seratus tahun sebelum menantangku kembali.' }
 ];
 
 function playDialog(sequence, onComplete) {
-  currentDialogSequence = sequence;
-  currentDialogIndex = 0;
+  currentDialogSequence = sequence; currentDialogIndex = 0;
   document.getElementById('dialog-overlay').classList.remove('hidden');
   document.getElementById('dialog-box').style.transform = 'translateY(0)';
   nextDialog(onComplete);
@@ -490,19 +546,15 @@ function playDialog(sequence, onComplete) {
 function nextDialog(onComplete) {
   if (currentDialogIndex >= currentDialogSequence.length) {
     document.getElementById('dialog-box').style.transform = 'translateY(150%)';
-    setTimeout(() => {
-      document.getElementById('dialog-overlay').classList.add('hidden');
-      if(onComplete) onComplete();
-    }, 400);
+    setTimeout(() => { document.getElementById('dialog-overlay').classList.add('hidden'); if(onComplete) onComplete(); }, 400);
     return;
   }
   
   const d = currentDialogSequence[currentDialogIndex];
   document.getElementById('dialog-name').textContent = d.name;
-  document.getElementById('dialog-name').style.color = d.color || '#f59e0b';
+  document.getElementById('dialog-name').style.color = d.color;
   
-  const textEl = document.getElementById('dialog-text');
-  textEl.innerHTML = '';
+  const textEl = document.getElementById('dialog-text'); textEl.innerHTML = '';
   
   anime.remove(textEl);
   anime.timeline().add({
@@ -511,16 +563,13 @@ function nextDialog(onComplete) {
   });
   
   document.getElementById('dialog-box').onclick = () => {
-     if (textEl.textContent.length < d.text.length) {
-         anime.remove(); textEl.textContent = d.text;
-     } else {
-         currentDialogIndex++; nextDialog(onComplete);
-     }
+     if (textEl.textContent.length < d.text.length) { anime.remove(); textEl.textContent = d.text; } 
+     else { currentDialogIndex++; nextDialog(onComplete); }
   };
 }
 
 // ==========================================
-// UI LOGIC & SETTINGS
+// TOGGLE SETTINGS (AUTO / MANUAL)
 // ==========================================
 function updateSowingUI() {
   const isAuto = sowingMode === 'auto';
@@ -529,12 +578,18 @@ function updateSowingUI() {
   const iconGame = document.getElementById('icon-sow-game');
   
   if (txtLobby) txtLobby.textContent = isAuto ? 'Mode Tabur: Otomatis' : 'Mode Tabur: Manual';
-  if (iconLobby) iconLobby.innerHTML = isAuto ? SVGS.zap : SVGS.hand;
-  if (iconGame) iconGame.innerHTML = isAuto ? SVGS.zap : SVGS.hand;
+  if (iconLobby) iconLobby.innerHTML = isAuto ? `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>` : `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${SVGS.hand}</svg>`;
+  if (iconGame) iconGame.innerHTML = isAuto ? `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>` : `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${SVGS.hand}</svg>`;
+  
+  const gameBtn = document.getElementById('btn-toggle-sow-game');
+  if (gameBtn) {
+    if (isAuto) gameBtn.classList.remove('btn-gold');
+    else gameBtn.classList.add('btn-gold');
+  }
 }
 
 function toggleSowingMode() {
-  if (animating || heldSeeds > 0) return;
+  if (animating || heldSeeds > 0) { showToast('Tunggu giliran selesai!'); return; }
   sowingMode = sowingMode === 'auto' ? 'manual' : 'auto';
   updateSowingUI();
   try { localStorage.setItem('mancala_sowing', sowingMode); } catch(e) {}
@@ -547,11 +602,17 @@ function setVariant(variant) {
   gameVariant = variant;
   document.getElementById('btn-var-mancala').classList.toggle('active', variant === 'mancala');
   document.getElementById('btn-var-congklak').classList.toggle('active', variant === 'congklak');
-  if (variant === 'congklak') {
-    INITIAL_SEEDS = 7; TOTAL_PITS = 16; P1_STORE = 7; P2_STORE = 15; P1_PITS = [0,1,2,3,4,5,6]; P2_PITS = [8,9,10,11,12,13,14];
+  setupGameRules();
+}
+
+function setupGameRules() {
+  if (gameVariant === 'congklak') {
+    INITIAL_SEEDS = 7; TOTAL_PITS = 16; P1_STORE = 7; P2_STORE = 15;
+    P1_PITS = [0,1,2,3,4,5,6]; P2_PITS = [8,9,10,11,12,13,14];
     document.getElementById('in-game-title').textContent = 'CONGKLAK';
   } else {
-    INITIAL_SEEDS = 4; TOTAL_PITS = 14; P1_STORE = 6; P2_STORE = 13; P1_PITS = [0,1,2,3,4,5]; P2_PITS = [7,8,9,10,11,12];
+    INITIAL_SEEDS = 4; TOTAL_PITS = 14; P1_STORE = 6; P2_STORE = 13;
+    P1_PITS = [0,1,2,3,4,5]; P2_PITS = [7,8,9,10,11,12];
     document.getElementById('in-game-title').textContent = 'MANCALA';
   }
 }
@@ -562,8 +623,6 @@ function updateLobbyNameDisplay() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  if (!checkDeviceGuard()) return; // GUARD CHECK
-
   try {
     myGlobalName = localStorage.getItem('mancala_p1_name') || '';
     if (myGlobalName) playerNames[1] = myGlobalName;
@@ -571,7 +630,9 @@ window.addEventListener('DOMContentLoaded', () => {
     if (savedSow) sowingMode = savedSow;
   } catch(e) {}
   
-  updateLobbyNameDisplay(); setVariant('mancala'); updateSowingUI();
+  updateLobbyNameDisplay();
+  setupGameRules(); 
+  updateSowingUI();
 
   if (!myGlobalName) {
     document.getElementById('global-name-modal').classList.remove('hidden');
@@ -579,6 +640,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// UI EVENT LISTENERS
 document.getElementById('btn-change-name').onclick = () => {
   const input = document.getElementById('input-global-name');
   if (input) input.value = myGlobalName || '';
@@ -588,18 +650,20 @@ document.getElementById('btn-change-name').onclick = () => {
 
 document.getElementById('btn-save-global-name').onclick = () => {
   const val = document.getElementById('input-global-name').value.trim();
-  myGlobalName = val || 'Player 1'; playerNames[1] = myGlobalName;
+  myGlobalName = val || 'Player 1';
+  playerNames[1] = myGlobalName;
   try { localStorage.setItem('mancala_p1_name', myGlobalName); } catch(e) {}
   document.getElementById('global-name-modal').classList.add('hidden');
   updateLobbyNameDisplay();
 };
-document.getElementById('input-global-name').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-save-global-name').click(); });
+
+document.getElementById('input-global-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-save-global-name').click();
+});
 
 document.getElementById('btn-play-story').onclick = () => {
   showScreen('game');
   document.getElementById('board-wrap').classList.add('dimmed');
-  
-  // Play Dialog Intro
   playDialog(storyIntro, () => {
     document.getElementById('board-wrap').classList.remove('dimmed');
     startingPlayer = 1; startGame();
@@ -607,9 +671,13 @@ document.getElementById('btn-play-story').onclick = () => {
 };
 
 // ==========================================
-// PHYSICAL SEEDS SYSTEM (Exact clone from index 5)
+// PHYSICAL SEEDS SYSTEM (BASE 100% INDEX 5)
 // ==========================================
-let seedEntities = []; let seedLayouts = {}; let pitElements = {}; let pitRects = {}; const SEED_SIZE = 14;
+let seedEntities = [];
+let seedLayouts = {};
+let pitElements = {};
+let pitRects = {};
+const SEED_SIZE = 14;
 
 function generateSeedLayout(capacity = 100) {
   const layouts = []; const goldenAngle = 2.399963;
@@ -667,9 +735,12 @@ function animateSeedCapture(seedObj, targetPos) {
 }
 
 // ==========================================
-// INIT BOARD (Exact clone from index 5)
+// INIT BOARD (BASE 100% INDEX 5)
 // ==========================================
-function createBoard() { board = Array(TOTAL_PITS).fill(0); P1_PITS.forEach(i => board[i] = INITIAL_SEEDS); P2_PITS.forEach(i => board[i] = INITIAL_SEEDS); }
+function createBoard() {
+  board = Array(TOTAL_PITS).fill(0);
+  P1_PITS.forEach(i => board[i] = INITIAL_SEEDS); P2_PITS.forEach(i => board[i] = INITIAL_SEEDS);
+}
 
 function buildBoard() {
   const wrap = document.getElementById('board-wrap'); wrap.innerHTML = '';
@@ -761,20 +832,30 @@ function updateCounts() {
   if (s2 && s2.textContent !== String(board[P2_STORE])) { s2.textContent = board[P2_STORE]; s2.classList.remove('bump'); void s2.offsetWidth; s2.classList.add('bump'); }
 }
 
-function removeAllHighlights() { for (let i = 0; i < TOTAL_PITS; i++) { if (pitElements[i]) pitElements[i].classList.remove('clickable', 'p1-clickable', 'p2-clickable', 'target-pit'); } }
+function removeAllHighlights() {
+  for (let i = 0; i < TOTAL_PITS; i++) {
+    if (pitElements[i]) pitElements[i].classList.remove('clickable', 'p1-clickable', 'p2-clickable', 'target-pit');
+  }
+}
 
 function updateClickability() {
   if (!gameActive || animating) { removeAllHighlights(); return; }
   removeAllHighlights();
 
+  // Mode Manual: Sorot lubang target saja
   if (sowingMode === 'manual' && heldSeeds > 0) {
-    if (turn === 1) { const el = pitElements[currentSowPit]; if (el) el.classList.add('clickable', 'target-pit'); }
+    if (turn === 1) {
+      const el = pitElements[currentSowPit];
+      if (el) el.classList.add('clickable', 'target-pit');
+    }
     return;
   }
 
-  if (turn === 1) {
-    P1_PITS.forEach(i => { const el = pitElements[i]; if (!el) return; if (board[i] > 0) el.classList.add('clickable','p1-clickable'); });
-  }
+  // Normal: Pilih lubang awal (Hanya P1 karena P2 adalah AI)
+  P1_PITS.forEach(i => {
+    const el = pitElements[i]; if (!el) return;
+    if (turn === 1 && board[i] > 0) el.classList.add('clickable','p1-clickable');
+  });
   
   const rowP1 = document.getElementById('row-p1'); const rowP2 = document.getElementById('row-p2');
   if (rowP1 && rowP2) { rowP1.classList.toggle('dimmed', turn !== 1); rowP2.classList.toggle('dimmed', turn !== 2); }
@@ -794,16 +875,22 @@ function getNextValidPit(curr, activeTurn) {
 
 function onPitClick(index) {
   if (!gameActive || animating) return;
-  if (sowingMode === 'manual' && heldSeeds > 0) { if (index !== currentSowPit) return; doMoveManual(index); } 
-  else {
-    if (turn !== 1) return; 
+
+  if (sowingMode === 'manual' && heldSeeds > 0) {
+    if (index !== currentSowPit) return; 
+    doMoveManual(index);
+  } else {
+    // Hanya player 1 yang bisa klik
+    if (turn !== 1) return;
     if (!P1_PITS.includes(index) || board[index] === 0) return;
-    if (sowingMode === 'auto') doMoveAuto(index); else doMoveManual(index);
+    
+    if (sowingMode === 'auto') doMoveAuto(index);
+    else doMoveManual(index);
   }
 }
 
 // ==========================================
-// CORE SOWING LOGIC (Exact clone from index 5)
+// AUTO SOWING (BASE 100% INDEX 5 - FIX CAPTURE)
 // ==========================================
 async function doMoveAuto(startIndex) {
   if (animating) return; animating = true; updateClickability(); cachePitRects(); 
@@ -881,7 +968,7 @@ async function doMoveAuto(startIndex) {
         const oppIndex = (TOTAL_PITS - 2) - curr;
         if (board[oppIndex] > 0) {
           const storeIdx = turn === 1 ? P1_STORE : P2_STORE;
-          const capName = turn === 1 ? 'KAMU' : 'ORION';
+          const capName = (playerNames[turn] || `Player ${turn}`).toUpperCase();
           updateTurnBadge(`${SVGS.zap} CAPTURE!`, turn === 1 ? 'p1' : 'p2');
           document.getElementById('turn-badge').classList.add('pulse'); setTimeout(() => document.getElementById('turn-badge')?.classList.remove('pulse'), 600);
           showToast(`${SVGS.zap} <span>${capName} menangkap biji!</span>`);
@@ -903,6 +990,9 @@ async function doMoveAuto(startIndex) {
   finishTurn(extraTurn);
 }
 
+// ==========================================
+// MANUAL SOWING (BASE 100% INDEX 5)
+// ==========================================
 async function doMoveManual(index) {
   if (animating) return; animating = true; updateClickability(); cachePitRects();
 
@@ -926,10 +1016,13 @@ async function doMoveManual(index) {
 
     if (activePitEl) activePitEl.classList.remove('active-pit');
     currentSowPit = getNextValidPit(index, turn);
-    animating = false; updateTurnBadge(`SISA: ${heldSeeds} BIJI`, turn === 1 ? 'p1' : 'p2'); updateClickability(); 
+    animating = false;
+    updateTurnBadge(`SISA: ${heldSeeds} BIJI`, turn === 1 ? 'p1' : 'p2');
+    updateClickability(); 
     return;
   }
 
+  // DROP BIJI SATU PER SATU
   let seedObj = movingSeedsArray.pop();
   if (seedObj) {
     seedObj.pit = currentSowPit; board[currentSowPit]++;
@@ -939,8 +1032,10 @@ async function doMoveManual(index) {
     if (movingSeedsArray.length > 0) {
       anime({
         targets: movingSeedsArray,
-        x: () => pitRects[currentSowPit].x - SEED_SIZE/2 + (Math.random()*16-8), y: () => pitRects[currentSowPit].y - SEED_SIZE/2 - 45 + (Math.random()*16-8),
-        duration: 150, easing: 'easeInOutSine', update: function() { movingSeedsArray.forEach(s => s.el.style.transform = `translate(${s.x}px, ${s.y}px) scale(${s.scale})`); }
+        x: () => pitRects[currentSowPit].x - SEED_SIZE/2 + (Math.random()*16-8),
+        y: () => pitRects[currentSowPit].y - SEED_SIZE/2 - 45 + (Math.random()*16-8),
+        duration: 150, easing: 'easeInOutSine',
+        update: function() { movingSeedsArray.forEach(s => s.el.style.transform = `translate(${s.x}px, ${s.y}px) scale(${s.scale})`); }
       });
     }
 
@@ -951,14 +1046,20 @@ async function doMoveManual(index) {
          complete: function() { seedObj.el.style.zIndex = '1'; resolve(); }
       });
     });
-    heldSeeds--; updateTurnBadge(heldSeeds > 0 ? `SISA: ${heldSeeds} BIJI` : `MENGEVALUASI...`, turn === 1 ? 'p1' : 'p2');
+    heldSeeds--;
+    updateTurnBadge(heldSeeds > 0 ? `SISA: ${heldSeeds} BIJI` : `MENGEVALUASI...`, turn === 1 ? 'p1' : 'p2');
   }
 
-  if (heldSeeds > 0) { currentSowPit = getNextValidPit(currentSowPit, turn); animating = false; updateClickability(); return; }
+  if (heldSeeds > 0) {
+    currentSowPit = getNextValidPit(currentSowPit, turn);
+    animating = false; updateClickability(); return;
+  }
 
+  // BIJI HABIS: Cek aturan
   const curr = currentSowPit; 
   const activePitEl = pitElements[curr]; if (activePitEl) activePitEl.classList.add('active-pit');
-  await sleep(350); if (activePitEl) activePitEl.classList.remove('active-pit');
+  await sleep(350);
+  if (activePitEl) activePitEl.classList.remove('active-pit');
 
   let extraTurn = false;
   if ((turn === 1 && curr === P1_STORE) || (turn === 2 && curr === P2_STORE)) {
@@ -978,7 +1079,8 @@ async function doMoveManual(index) {
           complete: resolve
         });
       });
-      currentSowPit = getNextValidPit(curr, turn); animating = false; updateClickability(); return;
+      currentSowPit = getNextValidPit(curr, turn);
+      animating = false; updateClickability(); return;
     }
   } else {
     const isOwnSide = (turn === 1 && P1_PITS.includes(curr)) || (turn === 2 && P2_PITS.includes(curr));
@@ -986,7 +1088,7 @@ async function doMoveManual(index) {
       const oppIndex = (TOTAL_PITS - 2) - curr;
       if (board[oppIndex] > 0) {
         const storeIdx = turn === 1 ? P1_STORE : P2_STORE;
-        const capName = turn === 1 ? 'KAMU' : 'ORION';
+        const capName = (playerNames[turn] || `Player ${turn}`).toUpperCase();
         updateTurnBadge(`${SVGS.zap} CAPTURE!`, turn === 1 ? 'p1' : 'p2');
         document.getElementById('turn-badge').classList.add('pulse'); setTimeout(() => document.getElementById('turn-badge')?.classList.remove('pulse'), 600);
         showToast(`${SVGS.zap} <span>${capName} menangkap biji!</span>`);
@@ -1010,7 +1112,7 @@ async function doMoveManual(index) {
 }
 
 // ==========================================
-// ORION AI ENGINE (BRUTAL DIFFICULTY)
+// ORION AI ENGINE (BRUTAL)
 // ==========================================
 function simEngineMove(boardState, startPit, playerTurn, isCongklak) {
   let state = [...boardState]; let curr = startPit; let seeds = state[curr]; state[curr] = 0;
@@ -1037,7 +1139,6 @@ function simEngineMove(boardState, startPit, playerTurn, isCongklak) {
 function evaluateBoard(state) {
   let aiScore = state[P2_STORE]; let p1Score = state[P1_STORE];
   let aiPits = 0; let p1Pits = 0;
-  // Orion menyukai jika masih banyak lubangnya yang berisi biji (banyak pilihan combo)
   for (let i of P2_PITS) { aiScore += state[i]; if(state[i]>0) aiPits++; }
   for (let i of P1_PITS) { p1Score += state[i]; if(state[i]>0) p1Pits++; }
   return (aiScore - p1Score) * 100 + (aiPits - p1Pits);
@@ -1077,8 +1178,8 @@ function getBestMoveAI(state, depth, isCongklak) {
 
   for (let move of validMoves) {
     let sim = simEngineMove(state, move, 2, isCongklak);
-    // Prioritaskan langkah yang memberikan giliran ekstra (bonus turn) dengan menaikkan skor jika nextTurn === 2
-    let baseScore = sim.nextTurn === 2 ? 500 : 0;
+    // Prioritas mutlak untuk langkah yang memberi giliran ekstra
+    let baseScore = sim.nextTurn === 2 ? 800 : 0;
     let score = baseScore + minimax(sim.state, depth - 1, -Infinity, Infinity, sim.nextTurn === 2, sim.nextTurn, isCongklak);
     if (score > bestScore) { bestScore = score; bestMove = move; }
   }
@@ -1088,18 +1189,19 @@ function getBestMoveAI(state, depth, isCongklak) {
 async function playAITurn() {
   if(!gameActive) return;
   updateTurnBadge(`ORION MENGKALKULASI...`, 'p2');
-  await sleep(600);
+  await sleep(700);
 
   let validMoves = P2_PITS.filter(i => board[i] > 0);
   if (!validMoves || validMoves.length === 0) return; 
   
   let isCongklak = gameVariant === 'congklak';
-  // Depth tinggi untuk level Brutal (Mancala = 6, Congklak = 5)
-  let d = isCongklak ? 5 : 6; 
+  // Depth diturunkan dikit untuk Congklak agar browser hp ga hang, 
+  // Mancala bisa pakai depth 6 karena kombinasinya lebih sedikit
+  let d = isCongklak ? 4 : 6; 
   let bestMove = getBestMoveAI(board, d, isCongklak); 
 
   if(bestMove !== undefined && bestMove !== -1) {
-    doMoveAuto(bestMove); // AI selalu jalan otomatis
+    doMoveAuto(bestMove); // AI selalu auto
   }
 }
 
@@ -1108,10 +1210,10 @@ async function playAITurn() {
 // ==========================================
 async function finishTurn(extraTurn) {
   if (extraTurn) {
-    const bonusName = turn === 1 ? 'KAMU' : 'ORION';
+    const bonusName = (playerNames[turn] || `Player ${turn}`).toUpperCase();
     updateTurnBadge(`${SVGS.target} BONUS TURN — ${bonusName}!`, turn === 1 ? 'p1' : 'p2');
     document.getElementById('turn-badge').classList.add('pulse'); setTimeout(() => document.getElementById('turn-badge')?.classList.remove('pulse'), 600);
-    showToast(`${SVGS.target} <span>${bonusName} mendapat giliran tambahan!</span>`);
+    showToast(`${SVGS.target} <span>${bonusName} giliran bonus!</span>`);
     await sleep(900);
   }
 
@@ -1154,43 +1256,44 @@ async function checkGameOver() {
 
 function showGameOver() {
   const s1 = board[P1_STORE], s2 = board[P2_STORE];
-  const n1 = playerNames[1] || 'Player 1';
-  
-  document.getElementById('go-title').textContent = s1 === s2 ? 'DRAW!' : (s1 > s2 ? 'KAMU MENANG!' : `ORION MENANG!`);
+  const n1 = playerNames[1] || 'Player 1'; const n2 = 'ORION';
+  document.getElementById('go-title').textContent = s1 === s2 ? 'DRAW!' : (s1 > s2 ? `${n1.toUpperCase()} WINS!` : `${n2} WINS!`);
   document.getElementById('go-p1').textContent = s1; document.getElementById('go-p2').textContent = s2;
-  document.getElementById('go-name-p1').textContent = n1;
-  document.getElementById('gameover-modal').classList.remove('hidden');
-
-  // Trigger Story Dialog based on result
+  const gn1 = document.getElementById('go-name-p1'); const gn2 = document.getElementById('go-name-p2');
+  if (gn1) gn1.textContent = n1; if (gn2) gn2.textContent = n2;
+  
+  // Munculkan dialog penutup
   setTimeout(() => {
     if (s1 > s2) {
-      document.getElementById('gameover-modal').classList.add('hidden');
-      playDialog(storyWin, () => {
-         document.getElementById('gameover-modal').classList.remove('hidden');
-      });
+      playDialog(storyWin, () => document.getElementById('gameover-modal').classList.remove('hidden'));
     } else if (s2 > s1) {
-      document.getElementById('gameover-modal').classList.add('hidden');
-      playDialog(storyLose, () => {
-         document.getElementById('gameover-modal').classList.remove('hidden');
-      });
+      playDialog(storyLose, () => document.getElementById('gameover-modal').classList.remove('hidden'));
+    } else {
+      document.getElementById('gameover-modal').classList.remove('hidden');
     }
   }, 1000);
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
 let toastTimer;
 function showToast(htmlMsg) {
-  const el = document.getElementById('toast'); el.innerHTML = htmlMsg; el.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+  const el = document.getElementById('toast');
+  el.innerHTML = htmlMsg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
 }
 
 function startGame() {
   createBoard(); turn = startingPlayer; gameActive = true; animating = false; pitElements = {};
   heldSeeds = 0; currentSowPit = -1; movingSeedsArray = []; 
 
-  const sn1 = document.getElementById('score-name-p1'); if (sn1) sn1.textContent = (playerNames[1] || 'PLAYER 1').toUpperCase();
+  const sn1 = document.getElementById('score-name-p1'); const sn2 = document.getElementById('score-name-p2');
+  if (sn1) sn1.textContent = (playerNames[1] || 'PLAYER 1').toUpperCase();
+  if (sn2) sn2.textContent = 'ORION';
+
+  showScreen('game'); buildBoard();
   
-  buildBoard();
   const starterName = turn === 1 ? 'GILIRANMU' : `ORION MULAI DULU`;
   updateTurnBadge(starterName, turn === 1 ? 'p1' : 'p2');
   document.getElementById('gameover-modal').classList.add('hidden');
@@ -1199,30 +1302,46 @@ function startGame() {
 }
 
 function exitToMenu() {
-  gameActive = false; document.getElementById('seed-layer').innerHTML = ''; seedEntities = []; showScreen('lobby');
+  gameActive = false; 
+  document.getElementById('seed-layer').innerHTML = ''; 
+  seedEntities = []; 
+  showScreen('lobby');
 }
 
 function showScreen(id) {
   ['lobby','game'].forEach(s => { document.getElementById(s)?.classList.toggle('hidden', s !== id); });
   const fsBtn = document.getElementById('btn-fs-global');
   if (fsBtn) fsBtn.style.display = (id === 'game') ? 'none' : 'inline-flex';
+  
+  // Tombol Rules (?) disembunyikan saat masuk game
   const rulesBtn = document.getElementById('btn-rules-lobby');
-  if (rulesBtn) rulesBtn.style.display = (id === 'game') ? 'none' : 'flex';
+  if (rulesBtn) rulesBtn.style.display = (id === 'lobby') ? 'flex' : 'none';
 }
 
 function checkOrientation() {
   const isPortrait = window.innerHeight > window.innerWidth;
   document.getElementById('portrait-warn').classList.toggle('hidden', !isPortrait);
 }
-let resizeTimeout; window.addEventListener('resize', () => { checkOrientation(); clearTimeout(resizeTimeout); resizeTimeout = setTimeout(() => { snapAllSeeds(); }, 150); }); checkOrientation();
+let resizeTimeout;
+window.addEventListener('resize', () => { 
+  checkOrientation(); 
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => { snapAllSeeds(); }, 150); 
+});
+checkOrientation();
 
 document.getElementById('btn-menu').onclick = exitToMenu;
 document.getElementById('go-menu').onclick = () => { document.getElementById('gameover-modal').classList.add('hidden'); exitToMenu(); };
-document.getElementById('go-rematch').onclick = () => { document.getElementById('gameover-modal').classList.add('hidden'); startingPlayer = startingPlayer === 1 ? 2 : 1; startGame(); };
+
+document.getElementById('go-rematch').onclick = () => {
+  document.getElementById('gameover-modal').classList.add('hidden');
+  startingPlayer = startingPlayer === 1 ? 2 : 1; startGame();
+};
 
 function tryLandscape() {
   try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); } catch(e) {}
-  if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{}); else if (document.documentElement.webkitRequestFullscreen) document.documentElement.webkitRequestFullscreen();
+  if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+  else if (document.documentElement.webkitRequestFullscreen) document.documentElement.webkitRequestFullscreen();
   try { localStorage.setItem('mancala_fs', '1'); } catch(e) {}
 }
 
@@ -1232,8 +1351,14 @@ function updateFsButton() {
   const btn2 = document.getElementById('btn-fs-game'); if (btn2) btn2.innerHTML = inFs ? SVGS.min : SVGS.max;
 }
 document.addEventListener('fullscreenchange', updateFsButton); document.addEventListener('webkitfullscreenchange', updateFsButton);
-const toggleFs = () => { if (document.fullscreenElement || document.webkitFullscreenElement) { if (document.exitFullscreen) document.exitFullscreen(); else if (document.webkitExitFullscreen) document.webkitExitFullscreen(); } else { tryLandscape(); } };
-document.getElementById('btn-fs-global').onclick = toggleFs; document.getElementById('btn-fs-game').onclick = toggleFs; document.getElementById('btn-force-landscape').onclick = () => tryLandscape();
+
+const toggleFs = () => {
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    if (document.exitFullscreen) document.exitFullscreen(); else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  } else { tryLandscape(); }
+};
+document.getElementById('btn-fs-global').onclick = toggleFs; document.getElementById('btn-fs-game').onclick = toggleFs;
+document.getElementById('btn-force-landscape').onclick = () => tryLandscape();
 try { if (localStorage.getItem('mancala_fs') === '1') { document.addEventListener('click', function autoFs() { if (!document.fullscreenElement) tryLandscape(); document.removeEventListener('click', autoFs); }, { once: true, capture: true }); } } catch(e) {}
 
 </script>
